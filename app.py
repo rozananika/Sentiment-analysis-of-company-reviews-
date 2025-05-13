@@ -8,6 +8,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from googletrans import Translator
 
 # Download NLTK data
 nltk.download('vader_lexicon')
@@ -50,6 +51,23 @@ def extract_revenue(revenue_str):
             return value * 1000
     return float('nan')
 
+# Initialize translator
+translator = Translator()
+
+# Translate text to English if not already
+def translate_to_english(text):
+    if pd.isna(text) or not text:
+        return ''
+    try:
+        # Detect language and translate if not English
+        detected_lang = translator.detect(text).lang
+        if detected_lang != 'en':
+            translated = translator.translate(text, src=detected_lang, dest='en')
+            return translated.text
+    except Exception as e:
+        print(f"Translation error: {e}")
+    return text
+
 def main():
     download_kaggle_dataset()
     df = pd.read_csv('company_reviews.csv', encoding='utf-8', engine='python')
@@ -64,6 +82,7 @@ def main():
 
     # VADER sentiment
     def get_vader_sentiment(text):
+        text = translate_to_english(text)
         if not text:
             return 0.0
         scores = sia.polarity_scores(text)
@@ -71,6 +90,7 @@ def main():
 
     # TextBlob sentiment
     def get_textblob_sentiment(text):
+        text = translate_to_english(text)
         if not text:
             return 0.0
         return TextBlob(text).sentiment.polarity

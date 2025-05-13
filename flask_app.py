@@ -54,7 +54,7 @@ def home():
     </html>
     ''', companies=companies)
 
-# Company detail page
+# Company detail page 
 @app.route('/company')
 def company_detail():
     company = request.args.get('name')
@@ -122,21 +122,6 @@ def company_detail():
     </div>
     </body>
     </html>
-        <th>TextBlob Score</th>
-        <th>TextBlob Sentiment</th>
-      </tr>
-      {% for i in range(reviews|length) %}
-      <tr>
-        <td>{{ i+1 }}</td>
-        <td>{{ reviews[i][:300] }}</td>
-        <td>{{ descriptions[i][:300] }}</td>
-        <td>{{ vader_scores[i] if vader_scores else '' }}</td>
-        <td>{{ vader_sentiments[i] if vader_sentiments else '' }}</td>
-        <td>{{ textblob_scores[i] if textblob_scores else '' }}</td>
-        <td>{{ textblob_sentiments[i] if textblob_sentiments else '' }}</td>
-      </tr>
-      {% endfor %}
-    </table>
     ''', company=company, reviews=reviews, descriptions=descriptions, vader_scores=vader_scores, vader_sentiments=vader_sentiments, textblob_scores=textblob_scores, textblob_sentiments=textblob_sentiments)
 
 # Dashboard route
@@ -207,4 +192,4 @@ def serve_static(filename):
     return '', 404
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=5000)
